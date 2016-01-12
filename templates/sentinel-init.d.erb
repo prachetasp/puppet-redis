@@ -8,7 +8,7 @@
 # Source function library
 . /etc/init.d/functions
 
-SENTINEL_PORT=<%= @port %>
+SENTINEL_PORT=<%= @conf_port %>
 NAME="sentinel_${SENTINEL_PORT}"
 
 if [ -r /etc/sysconfig/sentinel_${SENTINEL_PORT} ]; then
@@ -17,8 +17,8 @@ fi
 
 REDIS_USER=redis
 BIND_ADDRESS=<%= @conf_bind %>
-PIDFILE=<%= @conf_pidfile %>
-CONF="<%= @conf %>"
+PIDFILE=<%= @conf_pidfile_real %>
+CONF="<%= @conf_sentinel %>"
 EXEC=/usr/bin/redis-sentinel
 CLIEXEC="/usr/local/bin/redis-cli -p ${SENTINEL_PORT}"
 
