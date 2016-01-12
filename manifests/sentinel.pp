@@ -88,7 +88,7 @@ class redis::sentinel (
     name   => $package,
   }
 
-  if ($manage_upstart_scripts && $::osfamily == 'debian') {
+  if ($manage_upstart_scripts) and ($::osfamily == 'debian') {
     file { $upstart_script:
       ensure  => present,
       content => template('redis/sentinel-init.conf.erb'),
