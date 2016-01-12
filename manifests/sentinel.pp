@@ -40,6 +40,7 @@
 #
 class redis::sentinel (
   $conf_bind                = '0.0.0.0',
+  $conf                     = undef,
   $conf_port                = '26379',
   $conf_daemonize           = 'yes',
   $sentinel_confs           = [],
@@ -53,7 +54,13 @@ class redis::sentinel (
 
   include redis::sentinel_params
 
-  $conf_sentinel      = $redis::sentinel_params::conf
+  if $conf {
+    $conf_sentinel = $conf
+  }
+  else {
+    $conf_sentinel = $redis::sentinel_params::conf
+  }
+
   $conf_sentinel_orig = "${conf_sentinel}.puppet"
   $conf_logrotate     = $redis::sentinel_params::conf_logrotate
   $service            = $redis::sentinel_params::service
@@ -81,17 +88,32 @@ class redis::sentinel (
     name   => $package,
   }
 
-  if $manage_upstart_scripts == true {
+  if ($manage_upstart_scripts && $::osfamily == 'debian') {
+    file { $upstart_script:
+      ensure  => present,
+      content => template('redis/sentinel-init.conf.erb'),
+      before  => Service['sentinel'],
+    }
+
     service { 'sentinel':
       ensure     => $service_ensure,
       name       => $service,
       hasrestart => true,
       hasstatus  => true,
-      require    => [ File[$conf_sentinel_orig],
-                      File[$upstart_script] ],
+      require    => File[$conf_sentinel_orig],
       provider   => 'upstart'
     }
-  } else {
+  }
+  # Must be redhat variant
+  else {
+    if $manage_upstart_scripts {
+      file { $upstart_script:
+        ensure  => present,
+        content => template('redis/sentinel-init.d.erb'),
+        before  => Service['sentinel'],
+      }
+    }
+
     service { 'sentinel':
       ensure     => $service_ensure,
       name       => $service,
@@ -140,13 +162,6 @@ class redis::sentinel (
   if $service_restart == true {
     # https://github.com/fsalum/puppet-redis/pull/28
     File[$conf_sentinel_orig] ~> Service['sentinel']
-  }
-
-  if $manage_upstart_scripts == true {
-    file { $upstart_script:
-      ensure  => present,
-      content => template('redis/sentinel-init.conf.erb'),
-    }
   }
 
 }
