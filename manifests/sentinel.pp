@@ -109,6 +109,7 @@ class redis::sentinel (
     if $manage_upstart_scripts {
       file { $upstart_script:
         ensure  => present,
+        mode    => '0755',
         content => template('redis/sentinel-init.d.erb'),
         before  => Service['sentinel'],
       }
