@@ -60,7 +60,11 @@ case "$1" in
         fi
         ;;
     status)
-        status -p "${PIDFILE}" "sentinel_${SENTINEL_PORT}"
+        result=`status -p "${PIDFILE}" "sentinel_${SENTINEL_PORT}"`
+        echo $result
+        if [[ $result == *"stopped"* ]]; then
+            exit 1
+        fi
         ;;
     restart|force-reload)
         ${0} stop
