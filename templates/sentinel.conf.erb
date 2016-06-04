@@ -183,3 +183,10 @@ sentinel <%= key %> <%= master %> <%= @sentinel_confs[master][key] %>
 # Example:
 #
 # sentinel client-reconfig-script mymaster /var/redis/reconfig.sh
+
+# dir <working-directory>
+# Every long running process should have a well-defined working directory.
+# For Redis Sentinel to chdir to /tmp at startup is the simplest thing
+# for the process to don't interfere with administrative tasks such as
+# unmounting filesystems.
+dir /tmp
