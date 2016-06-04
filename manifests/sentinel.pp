@@ -136,7 +136,7 @@ class redis::sentinel (
     group   => redis,
     mode    => '0644',
     require => Package['redis'],
-    notify  => Exec["cp ${conf_sentinel_orig} ${conf_sentinel}"],
+    notify  => Exec["cp -p ${conf_sentinel_orig} ${conf_sentinel}"],
   }
 
   file { $conf_sentinel:
@@ -145,7 +145,7 @@ class redis::sentinel (
     require => Package['redis'],
   }
 
-  exec { "cp ${conf_sentinel_orig} ${conf_sentinel}":
+  exec { "cp -p ${conf_sentinel_orig} ${conf_sentinel}":
     path        => '/bin:/usr/bin:/sbin:/usr/sbin',
     refreshonly => true,
     notify     => Service['sentinel'],
