@@ -83,11 +83,6 @@ class redis::sentinel (
     $conf_logfile_real = $::redis::sentinel_params::logfile
   }
 
-  package { 'redis':
-    ensure => $package_ensure,
-    name   => $package,
-  }
-
   if ($manage_upstart_scripts) and ($::osfamily == 'debian') {
     file { $upstart_script:
       ensure  => present,

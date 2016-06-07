@@ -14,17 +14,17 @@ class redis::params {
 
   case $::osfamily {
     'redhat': {
+      $nologin_shell  = '/sbin/nologin'
       $package        = 'redis'
       $service        = 'redis'
-      $conf           = '/etc/redis.conf'
       $conf_logrotate = '/etc/logrotate.d/redis'
       $pidfile        = '/var/run/redis/redis.pid'
       $logfile        = '/var/log/redis/redis.log'
     }
     'debian': {
+      $nologin_shell  = '/usr/sbin/nologin'
       $package        = 'redis-server'
       $service        = 'redis-server'
-      $conf           = '/etc/redis/redis.conf'
       $conf_logrotate = '/etc/logrotate.d/redis-server'
       $pidfile        = '/var/run/redis/redis-server.pid'
       $logfile        = '/var/log/redis/redis-server.log'
