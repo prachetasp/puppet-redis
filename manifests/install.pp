@@ -3,7 +3,7 @@
 class redis::install(
   $redis_dl_dir      = '/opt/redis-dl',
   $redis_install_dir = '/opt/redis',
-  $version           = hiera('redis_version', '2.8.19')
+  $version           = '2.8.19'
   ){
 
   include redis::params
