@@ -14,11 +14,6 @@ class redis::install(
   $redis_tar           = "redis-${version}.tar.gz"
   $redis_pkg           = "${redis_dl_dir}/${redis_tar}"
 
-  package { 'redis':
-    ensure => $package_ensure,
-    name   => $package,
-  }
-
   file { [ $redis_dl_dir, $conf_dir ]:
     ensure => directory,
   }
